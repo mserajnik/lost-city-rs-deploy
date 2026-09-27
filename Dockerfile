@@ -115,6 +115,8 @@ RUN \
   rm -rf /var/lib/apt/lists/*
 
 COPY --chmod=755 ./docker-cmd-start.sh /usr/local/bin/start
+# Debian keeps package license information under `/usr/share/doc`.
+COPY ./docker-notice.txt /usr/share/doc/lost-city-rs-docker/NOTICE
 
 USER $LOST_CITY_RS_USER_NAME
 
