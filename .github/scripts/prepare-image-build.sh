@@ -13,6 +13,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source-path=SCRIPTDIR
 source "$script_dir/helpers.sh"
 
+require_env GITHUB_SHA
 require_env REGISTRY
 require_env IMAGE_NAME
 require_env ARCHITECTURES
@@ -31,6 +32,7 @@ require_env OCI_ANNOTATION_DESCRIPTION
 require_env OCI_ANNOTATION_BASE_NAME
 
 timestamp="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+repository_commit_hash="$(trim "$GITHUB_SHA")"
 # shellcheck disable=SC2153
 registry="$(trim "$REGISTRY")"
 # shellcheck disable=SC2153
@@ -143,6 +145,14 @@ for entry in "${metadata_entries[@]}"; do
     index_annotation_lines+=("index:org.opencontainers.image.$key=$value")
   fi
 done
+
+repository_revision_entry="io.github.mserajnik.lost-city-rs-docker.revision=$repository_commit_hash"
+label_lines+=("$repository_revision_entry")
+manifest_annotation_lines+=("manifest:$repository_revision_entry")
+
+if [[ "$is_multi_arch" == "true" ]]; then
+  index_annotation_lines+=("index:$repository_revision_entry")
+fi
 
 printf -v tags_output '%s,' "${tags[@]}"
 tags_output="${tags_output%,}"
