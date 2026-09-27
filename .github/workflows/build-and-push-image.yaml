@@ -37,7 +37,7 @@ env:
   OCI_ANNOTATION_LICENSES: MIT
   OCI_ANNOTATION_TITLE: Lost City RS
   OCI_ANNOTATION_DESCRIPTION: Lost City RS is a server emulator for RS2.
-  OCI_ANNOTATION_BASE_NAME: bun:debian
+  OCI_ANNOTATION_BASE_NAME: oven/bun:debian
 
 jobs:
   prepare:
