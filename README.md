@@ -5,6 +5,14 @@
 
 > A Docker setup for Lost City RS
 
+> [!CAUTION]
+> This branch preserves the project as it was before its relaunch on 2026-10-04
+> and is no longer maintained. Its instructions do not work with the current
+> images. The current instructions are in the README on the
+> [`master` branch][master-readme].
+
+---
+
 This is a simple, Docker-based solution for running
 [Lost City RS][lost-city-rs]. It offers:
 
@@ -248,5 +256,6 @@ It is intended for private, non-commercial use only and comes with no warranty.
 [license-cc-by-sa-4.0]: LICENSES/CC-BY-SA-4.0.txt
 [license-cc0-1.0]: LICENSES/CC0-1.0.txt
 [maintainer]: https://github.com/mserajnik
+[master-readme]: https://github.com/mserajnik/lost-city-rs-deploy/blob/master/README.md
 [pull-requests]: https://github.com/mserajnik/lost-city-rs-docker/pulls
 [reuse-spec]: https://reuse.software/spec/
