@@ -1,0 +1,36 @@
+# See `docs/compose.md`.
+
+services:
+  app:
+    # The `&app-image` anchor is used by `check-deploy-version` and has to
+    # stay.
+    image: &app-image ghcr.io/mserajnik/lost-city-rs:274
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'nc', '-z', 'localhost', '8888'] # The port has to match `WEB_PORT`.
+      interval: 1m
+      timeout: 3s
+      retries: 5
+      start_period: 5m
+    ports:
+      - 8888:8888 # The container port, right of the colon, has to match `WEB_PORT`.
+    volumes:
+      - ./storage/database:/opt/lost-city-rs/database
+      - ./storage/data/players:/opt/lost-city-rs/engine/data/players
+    # The `&app-environment` anchor is used by `check-deploy-version` and has
+    # to stay.
+    environment: &app-environment
+      - LOST_CITY_RS_DEPLOY_VERSION=1 # See `docs/breaking-changes.md`.
+      - LOST_CITY_RS_UID=1000 # On Linux, the owner of the bind mounts. Do not change it once the server has run.
+      - LOST_CITY_RS_GID=1000 # On Linux, the group of the bind mounts. Do not change it once the server has run.
+      - TZ=Etc/UTC # The time zone, usually your host's.
+      - WEB_PORT=8888 # The port of the web client inside the container.
+      - NODE_MEMBERS=true # Turns the members features on.
+      - NODE_XPRATE=1 # The experience rate multiplier.
+
+  # This runs only on demand. See `docs/usage.md#updating`.
+  check-deploy-version:
+    image: *app-image
+    profiles: ['tools']
+    entrypoint: ['check-deploy-version']
+    environment: *app-environment

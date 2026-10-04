@@ -1,0 +1,98 @@
+# SPDX-FileCopyrightText: 2025-2026 Michael Serajnik <https://github.com/mserajnik>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+ARG DEBIAN_FRONTEND=noninteractive
+ARG LOST_CITY_RS_VERSION=254
+ARG LOST_CITY_RS_ENGINE_REPOSITORY=https://github.com/LostCityRS/Engine-TS.git
+ARG LOST_CITY_RS_ENGINE_REVISION=${LOST_CITY_RS_VERSION}
+ARG LOST_CITY_RS_CONTENT_REPOSITORY=https://github.com/LostCityRS/Content.git
+ARG LOST_CITY_RS_CONTENT_REVISION=${LOST_CITY_RS_VERSION}
+
+FROM oven/bun:debian
+
+ARG DEBIAN_FRONTEND
+ARG LOST_CITY_RS_VERSION
+ARG LOST_CITY_RS_ENGINE_REPOSITORY
+ARG LOST_CITY_RS_ENGINE_REVISION
+ARG LOST_CITY_RS_CONTENT_REPOSITORY
+ARG LOST_CITY_RS_CONTENT_REVISION
+
+# These defaults cover the supported scope, which `docs/usage.md` describes.
+ENV EASY_STARTUP=true
+ENV WEBSITE_REGISTRATION=false
+ENV WEB_PORT=8888
+ENV NODE_PRODUCTION=true
+ENV NODE_DEBUG=false
+ENV LOGIN_SERVER=true
+ENV LOGIN_HOST=localhost
+ENV LOGIN_PORT=43500
+ENV FRIEND_SERVER=true
+ENV FRIEND_HOST=localhost
+ENV FRIEND_PORT=45099
+ENV LOGGER_SERVER=true
+ENV LOGGER_HOST=localhost
+ENV LOGGER_PORT=43501
+ENV DB_BACKEND=sqlite
+# Skip Husky's Git hooks.
+ENV HUSKY=0
+# Versions `244` and `245.2` otherwise download their script compiler on every
+# start. The image downloads it at build time instead.
+ENV BUILD_STARTUP_UPDATE=false
+
+RUN \
+  # Versions `244` and `245.2` compile RuneScript with Java. Java also brings
+  # `ca-certificates`, which the clones need.
+  apt update && \
+  apt install -y --no-install-recommends \
+    git \
+    netcat-openbsd \
+    openjdk-21-jdk && \
+  # The image's `bun` user already has UID and GID 1000. `usermod -m` moves the
+  # home directory, which can be the working directory.
+  cd /tmp && \
+  groupmod -n lost-city-rs bun && \
+  usermod -l lost-city-rs -d /home/lost-city-rs -m bun && \
+  mkdir -p /opt/lost-city-rs && \
+  git clone "$LOST_CITY_RS_ENGINE_REPOSITORY" /opt/lost-city-rs/engine && \
+  git -C /opt/lost-city-rs/engine -c advice.detachedHead=false checkout "$LOST_CITY_RS_ENGINE_REVISION" && \
+  rm -rf /opt/lost-city-rs/engine/.git && \
+  git clone "$LOST_CITY_RS_CONTENT_REPOSITORY" /opt/lost-city-rs/content && \
+  git -C /opt/lost-city-rs/content -c advice.detachedHead=false checkout "$LOST_CITY_RS_CONTENT_REVISION" && \
+  rm -rf /opt/lost-city-rs/content/.git && \
+  chown -R lost-city-rs:lost-city-rs /opt/lost-city-rs && \
+  apt autoremove -y && \
+  apt clean -y && \
+  rm -rf /var/lib/apt/lists/*
+
+COPY ./docker/check-deploy-version.sh /usr/local/lib/lost-city-rs-deploy/check-deploy-version.sh
+COPY ./docker/server/drop-privileges.sh /usr/local/lib/lost-city-rs-deploy/drop-privileges.sh
+COPY --chmod=755 ./docker/server/docker-cmd-start.sh /usr/local/bin/start
+COPY --chmod=755 ./docker/server/docker-cmd-check-deploy-version.sh /usr/local/bin/check-deploy-version
+# Debian keeps package license information under `/usr/share/doc`.
+COPY ./docker/docker-notice.txt /usr/share/doc/lost-city-rs-deploy/NOTICE
+
+# The engine keeps its SQLite files at fixed paths, so link them into a
+# directory for a volume.
+RUN \
+  mkdir /opt/lost-city-rs/database && \
+  for suffix in "" "-journal" "-shm" "-wal"; do \
+    ln -sn "/opt/lost-city-rs/database/db.sqlite$suffix" "/opt/lost-city-rs/engine/db.sqlite$suffix"; \
+  done && \
+  cd /opt/lost-city-rs/engine && \
+  bun install --frozen-lockfile && \
+  # Versions `244` and `245.2` pack their cache with a script compiler that the
+  # engine downloads. The build fails when the download does.
+  if [ -f src/util/RuneScriptCompiler.ts ]; then \
+    bun -e 'import { updateCompiler } from "#/util/RuneScriptCompiler.js"; process.exit((await updateCompiler()) ? 0 : 1);'; \
+  fi && \
+  rm -rf "$HOME/.bun/install/cache" "$HOME/.cache/prisma" && \
+  # `drop-privileges.sh` changes the owner of these to the user, and its `find`
+  # needs them to exist.
+  mkdir -p data/pack data/symbols node_modules/.cache && \
+  # This step runs as root, so change the owner of its files to the user.
+  # `find` leaves the files of the earlier layer alone, so they are not copied
+  # into this one.
+  find /opt/lost-city-rs \( \! -user lost-city-rs -o \! -group lost-city-rs \) -exec chown -h lost-city-rs:lost-city-rs {} +
+
+WORKDIR /home/lost-city-rs
+CMD ["start"]

@@ -1,0 +1,81 @@
+# The build of every image, which the build workflow passes to
+# docker-deploy-workflows. See its `docs/deploy-yaml.md` for the keys.
+
+primary-source: engine
+
+# A `pin` is the commit at which the watched files were last reviewed. After
+# updating the local copies, set it to the commit a failing check suggests.
+sources:
+  engine:
+    repository: LostCityRS/Engine-TS
+    branch: "{variant}"
+    pins:
+      "274": 8139461a8f13689db50f932b10932b447819c115
+      "254": 2e3bcf4392200e84dd15ce67008c5d41fa4537aa
+      "245.2": 3c16994ca4ba51b4e04f88316c1f7395b0c4bb8a
+      "244": 9aadcec4e9560b810b5e5eee31aadc67f3b206cd
+      "225": e1dea19f256c7ff1a89d47024c811c755ad2184d
+  content:
+    repository: LostCityRS/Content
+    branch: "{variant}"
+    pins:
+      "274": d0122985fdcc37b6ae0d572e042ad95a5e2f678d
+      "254": d0122985fdcc37b6ae0d572e042ad95a5e2f678d
+      "245.2": d0122985fdcc37b6ae0d572e042ad95a5e2f678d
+      "244": d0122985fdcc37b6ae0d572e042ad95a5e2f678d
+      "225": a06604e793f798cacbecb30c9c3cdbbbf894cd62
+
+# One variant per game version, each a branch of both repositories. Version
+# `274` runs on Node, the others on Bun.
+variants:
+  "274":
+    moving-tags: [latest]
+    vars: {dockerfile: docker/server/Dockerfile.node, base-name: node:24-trixie-slim}
+  "254": {}
+  "245.2": {}
+  "244": {}
+  "225": {}
+
+vars:
+  dockerfile: docker/server/Dockerfile
+  base-name: oven/bun:debian
+
+drift:
+  checks:
+    # - `.gitignore` lists the persisted paths, such as the SQLite database
+    #   files and the player save directory, so a renamed database file or a
+    #   new data directory shows up in the check.
+    # - A change to the SQLite migration set can break `prisma migrate deploy`
+    #   against a database that is already migrated.
+    # - The container command wrappers run the command of the `start` script
+    #   in `package.json` themselves. A changed script needs the same change
+    #   there.
+    - {source: engine, files: [.gitignore, package.json], trees: [prisma/singleworld/migrations]}
+    # `WorldConfig.ts` on Node and `Environment.ts` on Bun define the
+    # environment variables the engine reads, so an added or removed variable
+    # or a changed default shows up in the check. A `package-lock.json` in a
+    # Bun version means upstream switched it to Node, which needs
+    # `Dockerfile.node`.
+    - {source: engine, variants: ["274"], files: [src/util/WorldConfig.ts]}
+    - {source: engine, variants: ["254", "245.2", "244", "225"], files: [src/util/Environment.ts], absent: [package-lock.json]}
+    # The engine writes the pack files that the content `.gitignore` lists into
+    # the content tree at startup, and `drop-privileges.sh` changes the owner
+    # of `pack/` only. A generated file outside `pack/` also needs its path in
+    # `drop-privileges.sh`, or the engine cannot write it.
+    - {source: content, files: [.gitignore]}
+
+images:
+  - name: server
+    package: lost-city-rs
+    dockerfile: "{var:dockerfile}"
+    tags: ["{variant}-engine.{short-commit:engine}-content.{short-commit:content}", "{variant}"]
+    build-args:
+      LOST_CITY_RS_VERSION: "{variant}"
+      LOST_CITY_RS_ENGINE_REVISION: "{commit:engine}"
+      LOST_CITY_RS_CONTENT_REVISION: "{commit:content}"
+    oci:
+      title: lost-city-rs-deploy - Lost City RS server image
+      description: Lost City RS is a server emulator for RS2.
+      base-name: "{var:base-name}"
+      licenses: AGPL-3.0-or-later AND MIT
+      version: "{variant}"

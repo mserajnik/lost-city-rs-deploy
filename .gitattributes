@@ -1,0 +1,2 @@
+compose.yaml.example linguist-language=YAML
+docker/server/Dockerfile.node linguist-language=Dockerfile
