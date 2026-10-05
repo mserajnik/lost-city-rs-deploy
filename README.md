@@ -33,8 +33,8 @@ lost-city-rs-deploy is a Docker-based solution for running
 
 ## Quick start
 
-The steps below get a local setup running quickly, for playing on the same
-machine. You need [Docker][docker] with [Docker Compose][docker-compose].
+The steps below get a local installation running quickly, for playing on the
+same machine. You need [Docker][docker] with [Docker Compose][docker-compose].
 
 1. Clone the repository and copy the example Compose file:
 

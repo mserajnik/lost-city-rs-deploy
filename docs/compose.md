@@ -69,5 +69,5 @@ changing the owner of the directories on the host, for example with
 to the files it created.
 
 On macOS, Docker maps the owner of bind-mounted files, and the default values
-work. On Windows, a setup on a Windows drive behaves the same way. A setup
-inside the Linux file system of WSL 2 follows the rules for Linux.
+work. On Windows, an installation on a Windows drive behaves the same way. An
+installation inside the Linux file system of WSL 2 follows the rules for Linux.

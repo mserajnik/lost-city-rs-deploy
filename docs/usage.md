@@ -36,7 +36,7 @@ More images are added as more versions become fully playable.
 
 Each image also has a tag with the two commits it contains, as 7-character
 prefixes, such as `274-engine.1d25566-content.65b754f`. Use such a tag to pin
-your setup to a specific build.
+your installation to a specific build.
 
 Since the Docker images are generally built only once a day, there is likely no
 build for every single Lost City RS commit combination. Older images are
@@ -83,13 +83,13 @@ container:
 docker compose up -d
 ```
 
-If you pinned your setup to a specific build, the update only takes effect once
-you set a newer tag.
+If you pinned your installation to a specific build, the update only takes
+effect once you set a newer tag.
 
 > [!WARNING]
 > Switching to another game version by changing the image tag is unsupported.
 > The versions apply different database migrations, so the switch can leave
-> your data unusable. To start a fresh setup with another version, back up
+> your data unusable. To start a new installation with another version, back up
 > `storage/` first, and then follow the
 > [quick start section](../README.md#quick-start) in a new clone of this
 > repository.
