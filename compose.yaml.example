@@ -21,9 +21,9 @@ services:
     # to stay.
     environment: &app-environment
       - LOST_CITY_RS_DEPLOY_VERSION=1 # See `docs/breaking-changes.md`.
+      - TZ=Etc/UTC # The time zone, usually your host's.
       - LOST_CITY_RS_UID=1000 # On Linux, the owner of the bind mounts. Do not change it once the server has run.
       - LOST_CITY_RS_GID=1000 # On Linux, the group of the bind mounts. Do not change it once the server has run.
-      - TZ=Etc/UTC # The time zone, usually your host's.
       - WEB_PORT=8888 # The port of the web client inside the container.
       - NODE_MEMBERS=true # Turns the members features on.
       - NODE_XPRATE=1 # The experience rate multiplier.

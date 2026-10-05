@@ -28,9 +28,9 @@ The `environment` of `app` has:
 | Variable                      | Default   | Description                                                                                                                 |
 | ----------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `LOST_CITY_RS_DEPLOY_VERSION` | Required  | The number that the image checks on startup. See the [`LOST_CITY_RS_DEPLOY_VERSION` section](#lost_city_rs_deploy_version). |
+| `TZ`                          | `Etc/UTC` | The time zone of the service, such as `Europe/Vienna`. You usually want to set this to your host's time zone.               |
 | `LOST_CITY_RS_UID`            | `1000`    | The UID the server runs as. See the [user and group section](#user-and-group).                                              |
 | `LOST_CITY_RS_GID`            | `1000`    | The GID the server runs as. See the [user and group section](#user-and-group).                                              |
-| `TZ`                          | `Etc/UTC` | The time zone of the service, such as `Europe/Vienna`. You usually want to set this to your host's time zone.               |
 | `WEB_PORT`                    | `8888`    | The port of the web client inside the container.                                                                            |
 | `NODE_MEMBERS`                | `true`    | With `true`, it enables members features for the world.                                                                     |
 | `NODE_XPRATE`                 | `1`       | The experience rate multiplier, such as `2` for twice the experience.                                                       |
