@@ -104,6 +104,16 @@ The prompt that works best depends on the agent and the model.
 - [Breaking changes](docs/breaking-changes.md): the changes you have to act on
   when you update.
 
+## Similar Docker setups
+
+- [vmangos-deploy][vmangos-deploy] for [VMaNGOS][vmangos], a progressive
+  Vanilla WoW server emulator that aims to eventually support all versions from
+  `1.2.4.4222` to `1.12.1.5875`.
+- [cmangos-deploy][cmangos-deploy] for [CMaNGOS][cmangos], a WoW server
+  emulator that supports Vanilla (which CMaNGOS calls Classic), TBC, and WotLK.
+- [tortoise-deploy][tortoise-deploy] for [Tortoise-WoW][tortoise-wow], a
+  community-driven restoration of Turtle WoW's `1.18.1.7272` patch.
+
 ## Maintainer
 
 [Michael Serajnik][maintainer]
@@ -136,6 +146,8 @@ It is intended for private, non-commercial use only and comes with no warranty.
 [badge-lint-status]: https://github.com/mserajnik/lost-city-rs-deploy/actions/workflows/lint.yaml/badge.svg
 [badge-lint-status-url]: https://github.com/mserajnik/lost-city-rs-deploy/actions/workflows/lint.yaml
 [claude-code]: https://www.anthropic.com/product/claude-code
+[cmangos]: https://github.com/cmangos
+[cmangos-deploy]: https://github.com/mserajnik/cmangos-deploy
 [codex]: https://openai.com/codex
 [docker]: https://docs.docker.com/get-docker/
 [docker-compose]: https://docs.docker.com/compose/install/
@@ -147,3 +159,7 @@ It is intended for private, non-commercial use only and comes with no warranty.
 [maintainer]: https://github.com/mserajnik
 [pull-requests]: https://github.com/mserajnik/lost-city-rs-deploy/pulls
 [reuse-spec]: https://reuse.software/spec/
+[tortoise-deploy]: https://github.com/mserajnik/tortoise-deploy
+[tortoise-wow]: https://github.com/tortoise-wow/tortoise-wow
+[vmangos]: https://github.com/vmangos/core
+[vmangos-deploy]: https://github.com/mserajnik/vmangos-deploy
