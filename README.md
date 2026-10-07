@@ -3,8 +3,6 @@
 [![Lint status][badge-lint-status]][badge-lint-status-url]
 [![Build status][badge-build-status]][badge-build-status-url]
 
-> A Docker setup for Lost City RS
-
 ---
 
 > [!WARNING]
