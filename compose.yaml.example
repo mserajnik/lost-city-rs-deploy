@@ -2,8 +2,8 @@
 
 services:
   app:
-    # The `&app-image` anchor is used by `check-deploy-version` and has to
-    # stay.
+    # The `&app-image` anchor is used by the `check-deploy-version` service and
+    # has to stay.
     image: &app-image ghcr.io/mserajnik/lost-city-rs:274
     restart: unless-stopped
     healthcheck:
@@ -17,13 +17,13 @@ services:
     volumes:
       - ./storage/database:/opt/lost-city-rs/database
       - ./storage/data/players:/opt/lost-city-rs/engine/data/players
-    # The `&app-environment` anchor is used by `check-deploy-version` and has
-    # to stay.
+    # The `&app-environment` anchor is used by the `check-deploy-version`
+    # service and has to stay.
     environment: &app-environment
       - LOST_CITY_RS_DEPLOY_VERSION=1 # See `docs/breaking-changes.md`.
       - TZ=Etc/UTC # The time zone, usually your host's.
-      - LOST_CITY_RS_UID=1000 # On Linux, the owner of the bind mounts. Do not change it once the server has run.
-      - LOST_CITY_RS_GID=1000 # On Linux, the group of the bind mounts. Do not change it once the server has run.
+      - LOST_CITY_RS_UID=1000 # On Linux, the owner of the bind mounts. To change this after the first start, change their owner on the host as well.
+      - LOST_CITY_RS_GID=1000 # On Linux, the group of the bind mounts. To change this after the first start, change their group on the host as well.
       - WEB_PORT=8888 # The port of the web client inside the container.
       - NODE_MEMBERS=true # Turns the members features on.
       - NODE_XPRATE=1 # The experience rate multiplier.

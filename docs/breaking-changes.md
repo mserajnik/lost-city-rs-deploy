@@ -4,8 +4,9 @@ Some updates require you to adjust your configuration. These breaking changes
 are listed below, newest first.
 
 The Docker image checks `LOST_CITY_RS_DEPLOY_VERSION` on startup. Each breaking
-change raises the number it expects by 1, and thus prevents installations that
-lack the necessary adjustments for the breaking change from starting.
+change raises the number that the image expects by one, and thus prevents
+installations that lack the necessary adjustments for the breaking change from
+starting.
 
 To update across a version, first refresh your clone of this repository, as the
 [updating your clone section](usage.md#updating-your-clone) describes, so you
@@ -25,9 +26,9 @@ repository's own files. Otherwise, make a new clone of the repository and move
 these over without replacing the repository's own files. Either way, `git pull`
 works again afterwards.
 
-Version 1 makes several changes to the Compose file, which would be cumbersome
-to make by hand. Instead, it is recommended to start from a fresh copy of the
-example Compose file, and then re-apply your customizations there.
+Version 1 changes the example Compose file in several places, which would be
+cumbersome to repeat by hand. Instead, it is recommended to start from a fresh
+copy of it, and then re-apply your customizations there.
 
 Version 1 brings these changes:
 

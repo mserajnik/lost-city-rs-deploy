@@ -1,8 +1,8 @@
 # Usage
 
-To run Lost City RS, you choose a Docker image for a version and start it with
-Docker Compose. Later, you update it to get the latest Lost City RS changes.
-The sections below describe each step and what the setup covers. The
+To run Lost City RS, you choose a Docker image for a version and start the
+server with Docker Compose. Later, you update it to get the latest Lost City RS
+changes. The sections below describe each step and what the setup covers. The
 [Docker Compose reference](compose.md) describes each setting in your
 `compose.yaml`.
 

@@ -20,14 +20,14 @@ The `app` service runs Lost City RS.
 
 | Key           | Description                                                                                                                                                                                                                                                                                                                                                       |
 | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `image`       | The Docker image. Its tag indicates the game version, such as `ghcr.io/mserajnik/lost-city-rs:274`. The [versions section](usage.md#versions) lists the available images. The anchor `&app-image` passes the image on to `check-deploy-version`, and has to stay.                                                                                                 |
+| `image`       | The Docker image. Its tag indicates the game version, such as `ghcr.io/mserajnik/lost-city-rs:274`. The [versions section](usage.md#versions) lists the available images. The anchor `&app-image` passes the image on to the `check-deploy-version` service, and has to stay.                                                                                     |
 | `restart`     | With `unless-stopped`, Docker restarts the container automatically when it exits and when Docker itself starts, unless you stopped it manually.                                                                                                                                                                                                                   |
 | `healthcheck` | Sets the container's status to `healthy` or `unhealthy`, to indicate whether something is wrong. The port in `test` has to match `WEB_PORT`. `start_period: 5m` covers the first minutes after a start, when the engine applies its migrations and packs its cache, and prevents a failing healthcheck during that period from setting the status to `unhealthy`. |
 | `ports`       | The port mapping of the web client. To use another port on the host, change the host port number, left of the colon. The container port number, right of the colon, has to match `WEB_PORT`.                                                                                                                                                                      |
 | `volumes`     | `storage/database/` contains the SQLite database, and `storage/data/players/` contains the player saves. The paths inside the container, right of the colon, have to stay as they are.                                                                                                                                                                            |
-| `environment` | The variables in the table below. The anchor `&app-environment` passes them on to `check-deploy-version`, and has to stay.                                                                                                                                                                                                                                        |
+| `environment` | The variables in the table below. The anchor `&app-environment` passes them on to the `check-deploy-version` service, and has to stay.                                                                                                                                                                                                                            |
 
-The `environment` of `app` has:
+The `environment` key of the `app` service has:
 
 | Variable                      | Default   | Description                                                                                                                 |
 | ----------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------- |
@@ -36,7 +36,7 @@ The `environment` of `app` has:
 | `LOST_CITY_RS_UID`            | `1000`    | The UID the server runs as. See the [user and group section](#user-and-group).                                              |
 | `LOST_CITY_RS_GID`            | `1000`    | The GID the server runs as. See the [user and group section](#user-and-group).                                              |
 | `WEB_PORT`                    | `8888`    | The port of the web client inside the container.                                                                            |
-| `NODE_MEMBERS`                | `true`    | With `true`, it enables members features for the world.                                                                     |
+| `NODE_MEMBERS`                | `true`    | With `true`, it enables the members features for the world.                                                                 |
 | `NODE_XPRATE`                 | `1`       | The experience rate multiplier, such as `2` for twice the experience.                                                       |
 
 ### `check-deploy-version`
@@ -46,10 +46,10 @@ for a breaking change, as the [updating section](usage.md#updating) describes.
 
 | Key           | Description                                                                                                                                               |
 | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `image`       | The image of `app`, through the alias `*app-image`, so it checks the image that `app` runs. It has to stay as it is.                                      |
+| `image`       | The same image as the `app` service, through the alias `*app-image`, so it checks the image that actually runs. It has to stay as it is.                  |
 | `profiles`    | With `['tools']`, `docker compose up` does not start the service, because it only runs on demand, to check for breaking changes. It has to stay as it is. |
 | `entrypoint`  | Runs the check. It has to stay as it is.                                                                                                                  |
-| `environment` | The environment of `app`, through the alias `*app-environment`. It has to stay as it is.                                                                  |
+| `environment` | The same variables as the `app` service, through the alias `*app-environment`. It has to stay as it is.                                                   |
 
 ## `LOST_CITY_RS_DEPLOY_VERSION`
 

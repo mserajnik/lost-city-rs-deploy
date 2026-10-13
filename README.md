@@ -99,8 +99,8 @@ The prompt that works best depends on the agent and the model.
 
 - [Usage](docs/usage.md): the scope of the setup, choosing images, and running
   and updating Lost City RS.
-- [Docker Compose reference](docs/compose.md): every setting in the Compose
-  file.
+- [Docker Compose reference](docs/compose.md): every setting in your
+  `compose.yaml`.
 - [Breaking changes](docs/breaking-changes.md): the changes you have to act on
   when you update.
 

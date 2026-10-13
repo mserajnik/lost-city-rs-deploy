@@ -17,7 +17,7 @@ set -eu
 
 cd /opt/lost-city-rs/engine
 
-echo "[lost-city-rs-deploy]: Generating world configuration from environment variables."
+echo "[lost-city-rs-deploy]: Generating the world configuration from the environment variables..."
 
 rm -f data/config/world.json
 

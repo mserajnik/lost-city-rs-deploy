@@ -31,6 +31,6 @@ if [ "$(id -u)" = "0" ]; then
   export HOME=/home/lost-city-rs LOST_CITY_RS_PRIVILEGES_DROPPED=1
   exec setpriv --reuid="$uid" --regid="$gid" --clear-groups --inh-caps=-all "$0" "$@"
 elif [ -z "${LOST_CITY_RS_PRIVILEGES_DROPPED:-}" ]; then
-  echo "[lost-city-rs-deploy]: ERROR: The container has to start as root. Replace 'user' with 'LOST_CITY_RS_UID' and 'LOST_CITY_RS_GID' in its service in your 'compose.yaml', as 'compose.yaml.example' shows." >&2
+  echo "[lost-city-rs-deploy]: ERROR: The container has to start as root. Replace 'user' with 'LOST_CITY_RS_UID' and 'LOST_CITY_RS_GID' in its service in your 'compose.yaml', as the example Compose file shows." >&2
   exit 1
 fi
