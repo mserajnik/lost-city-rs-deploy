@@ -74,7 +74,7 @@ docker compose run --rm check-deploy-version
 ```
 
 When the new image needs configuration adjustments due to a
-[breaking change](breaking-changes.md), the check fails and names the version
+[breaking change](breaking-changes.md), the check fails and shows the version
 it expects. Make those adjustments first.
 
 If the check passes and prints that the variable matches, re-create the
