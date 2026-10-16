@@ -79,7 +79,8 @@ body:
 
         ```sh
         docker compose images
-        docker image inspect --format '{{ json .Config.Labels }}' ghcr.io/mserajnik/lost-city-rs:<version>
+        docker image inspect --format '{{ json .Config.Labels }}' \
+          ghcr.io/mserajnik/lost-city-rs:<version>
         ```
       render: text
     validations:
@@ -121,7 +122,11 @@ body:
         On Windows, if your installation is on the Windows file system (PowerShell):
 
         ```powershell
-        Get-ChildItem -Recurse | Where-Object FullName -NotMatch '[\\/]\.git[\\/]' | Format-Table Mode, FullName -AutoSize | Out-String -Width 4096
+        $exclude = '[\\/]\.git[\\/]'
+        Get-ChildItem -Recurse |
+          Where-Object FullName -NotMatch $exclude |
+          Format-Table Mode, FullName -AutoSize |
+          Out-String -Width 4096
         ```
       render: text
     validations:
