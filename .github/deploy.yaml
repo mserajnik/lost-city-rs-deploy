@@ -42,7 +42,7 @@ vars:
   dockerfile: docker/server/Dockerfile
   base-name: oven/bun:debian
 
-drift:
+diff:
   checks:
     # - `.gitignore` lists the persisted paths, such as the SQLite database
     #   files and the player save directory, so a renamed database file or a
