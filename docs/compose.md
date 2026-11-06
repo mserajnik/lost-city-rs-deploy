@@ -18,26 +18,26 @@ some settings in more detail.
 
 The `app` service runs Lost City RS.
 
-| Key           | Description                                                                                                                                                                                                                                                                                                                                                       |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `image`       | The Docker image. Its tag indicates the game version, such as `ghcr.io/mserajnik/lost-city-rs:274`. The [versions section](usage.md#versions) lists the available images. The anchor `&app-image` passes the image on to the `check-deploy-version` service, and has to stay.                                                                                     |
-| `restart`     | With `unless-stopped`, Docker restarts the container automatically when it exits and when Docker itself starts, unless you stopped it manually.                                                                                                                                                                                                                   |
-| `healthcheck` | Sets the container's status to `healthy` or `unhealthy`, to indicate whether something is wrong. The port in `test` has to match `WEB_PORT`. `start_period: 5m` covers the first minutes after a start, when the engine applies its migrations and packs its cache, and prevents a failing healthcheck during that period from setting the status to `unhealthy`. |
-| `ports`       | The port mapping of the web client. To use another port on the host, change the host port number, left of the colon. The container port number, right of the colon, has to match `WEB_PORT`.                                                                                                                                                                      |
-| `volumes`     | `storage/database/` contains the SQLite database, and `storage/data/players/` contains the player saves. The paths inside the container, right of the colon, have to stay as they are.                                                                                                                                                                            |
-| `environment` | The variables in the table below. The anchor `&app-environment` passes them on to the `check-deploy-version` service, and has to stay.                                                                                                                                                                                                                            |
+| Key           | Description                                                                                                                                                                                                                                                                                                                                                                    |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `image`       | The Docker image. Its tag indicates the game version, such as `ghcr.io/mserajnik/lost-city-rs:274`. The [versions section](usage.md#versions) lists the available images. The anchor `&app-image` passes the image on to the `check-deploy-version` service, and has to stay.                                                                                                  |
+| `restart`     | With `unless-stopped`, Docker restarts the container automatically when it exits and when Docker itself starts, unless you stopped it manually.                                                                                                                                                                                                                                |
+| `healthcheck` | Sets the container's status to `healthy` or `unhealthy`, to indicate whether something is wrong. The port in `test` has to match `WEB_PORT`. `start_period: 5m` covers the first minutes after the container starts, when the engine applies its migrations and packs its cache, and prevents a failing healthcheck during that period from setting the status to `unhealthy`. |
+| `ports`       | The port mapping of the web client. To use another port on the host, change the host port number, left of the colon. The container port number, right of the colon, has to match `WEB_PORT`.                                                                                                                                                                                   |
+| `volumes`     | `storage/database/` contains the SQLite database, and `storage/data/players/` contains the player saves. The paths inside the container, right of the colon, have to stay as they are.                                                                                                                                                                                         |
+| `environment` | The variables in the table below. The anchor `&app-environment` passes them on to the `check-deploy-version` service, and has to stay.                                                                                                                                                                                                                                         |
 
 The `environment` key of the `app` service has:
 
-| Variable                      | Default   | Description                                                                                                                 |
-| ----------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `LOST_CITY_RS_DEPLOY_VERSION` | Required  | The number that the image checks on startup. See the [`LOST_CITY_RS_DEPLOY_VERSION` section](#lost_city_rs_deploy_version). |
-| `TZ`                          | `Etc/UTC` | The time zone of the service, such as `Europe/Vienna`. You usually want to set this to your host's time zone.               |
-| `LOST_CITY_RS_UID`            | `1000`    | The UID the server runs as. See the [user and group section](#user-and-group).                                              |
-| `LOST_CITY_RS_GID`            | `1000`    | The GID the server runs as. See the [user and group section](#user-and-group).                                              |
-| `WEB_PORT`                    | `8888`    | The port of the web client inside the container.                                                                            |
-| `NODE_MEMBERS`                | `true`    | With `true`, it enables the members features for the world.                                                                 |
-| `NODE_XPRATE`                 | `1`       | The experience rate multiplier, such as `2` for twice the experience.                                                       |
+| Variable                      | Default   | Description                                                                                                                                |
+| ----------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `LOST_CITY_RS_DEPLOY_VERSION` | Required  | The number that the image checks when the container starts. See the [`LOST_CITY_RS_DEPLOY_VERSION` section](#lost_city_rs_deploy_version). |
+| `TZ`                          | `Etc/UTC` | The time zone of the service, such as `Europe/Vienna`. You usually want to set this to your host's time zone.                              |
+| `LOST_CITY_RS_UID`            | `1000`    | The UID the server runs as. See the [user and group section](#user-and-group).                                                             |
+| `LOST_CITY_RS_GID`            | `1000`    | The GID the server runs as. See the [user and group section](#user-and-group).                                                             |
+| `WEB_PORT`                    | `8888`    | The port of the web client inside the container.                                                                                           |
+| `NODE_MEMBERS`                | `true`    | With `true`, it enables the members features for the world.                                                                                |
+| `NODE_XPRATE`                 | `1`       | The experience rate multiplier, such as `2` for twice the experience.                                                                      |
 
 ### `check-deploy-version`
 
@@ -53,11 +53,12 @@ for a breaking change, as the [updating section](usage.md#updating) describes.
 
 ## `LOST_CITY_RS_DEPLOY_VERSION`
 
-The image expects a specific number in `LOST_CITY_RS_DEPLOY_VERSION` and
-refuses to start with any other value, a missing one included. When a new image
-changes something that you have to act on, the number it expects increases by
-one, and the [breaking changes documentation](breaking-changes.md) lists what
-to change before you raise the number in your `compose.yaml` to match.
+The image expects a specific number in `LOST_CITY_RS_DEPLOY_VERSION`, and its
+container refuses to start when the variable is missing or set to any other
+value. When a new image changes something that you have to act on, the number
+it expects increases by one, and the
+[breaking changes documentation](breaking-changes.md) lists what to change
+before you raise the number in your `compose.yaml` to match.
 
 ## User and group
 

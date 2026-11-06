@@ -5,8 +5,8 @@
 
 # Starts Lost City RS from version `274` on, under Node.js. The engine reads
 # its configuration from `data/config/world.json` and generates that file from
-# `.env` when it is missing. Writing `.env` from the environment on every start
-# keeps the Compose file the source of truth.
+# `.env` when it is missing. Writing `.env` from the environment every time the
+# container starts keeps the Compose file the source of truth.
 
 set -eu
 

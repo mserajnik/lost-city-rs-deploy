@@ -3,9 +3,9 @@
 Some updates require you to adjust your configuration. These breaking changes
 are listed below, newest first.
 
-The Docker image checks `LOST_CITY_RS_DEPLOY_VERSION` on startup. Each breaking
-change raises the number that the image expects by one, and thus prevents
-installations that lack the necessary adjustments for the breaking change from
+The Docker image checks `LOST_CITY_RS_DEPLOY_VERSION` when its container
+starts. Each breaking change raises the number that the image expects by one,
+and thus prevents installations that lack the necessary adjustments from
 starting.
 
 To update across a version, first refresh your clone of this repository, as the
@@ -35,8 +35,8 @@ Version 1 brings these changes:
 - The container now starts as root and switches to the UID and GID from
   `LOST_CITY_RS_UID` and `LOST_CITY_RS_GID`. Setting `user` instead stops the
   container with an error.
-- The image now checks `LOST_CITY_RS_DEPLOY_VERSION` on startup and stops when
-  it is missing or different.
+- The container now refuses to start when `LOST_CITY_RS_DEPLOY_VERSION` is
+  missing or different.
 - The example Compose file has a `check-deploy-version` service, which the
   [updating section](usage.md#updating) describes.
 

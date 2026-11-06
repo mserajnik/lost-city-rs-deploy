@@ -61,9 +61,9 @@ drift:
     - {source: engine, variants: ["274"], files: [src/util/WorldConfig.ts]}
     - {source: engine, variants: ["254", "245.2", "244", "225"], files: [src/util/Environment.ts], absent: [package-lock.json]}
     # The engine writes the pack files that the content `.gitignore` lists into
-    # the content tree at startup, and `drop-privileges.sh` changes the owner
-    # of `pack/` only. A generated file outside `pack/` also needs its path in
-    # `drop-privileges.sh`, or the engine cannot write it.
+    # the content tree when it starts, and `drop-privileges.sh` changes the
+    # owner of `pack/` only. A generated file outside `pack/` also needs its
+    # path in `drop-privileges.sh`, or the engine cannot write it.
     - {source: content, files: [.gitignore]}
 
 images:

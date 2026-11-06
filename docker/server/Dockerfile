@@ -35,8 +35,8 @@ ENV LOGGER_PORT=43501
 ENV DB_BACKEND=sqlite
 # Skip Husky's Git hooks.
 ENV HUSKY=0
-# Versions `244` and `245.2` otherwise download their script compiler on every
-# start. The image downloads it at build time instead.
+# Versions `244` and `245.2` otherwise download their script compiler every
+# time the container starts. It is downloaded at build time instead.
 ENV BUILD_STARTUP_UPDATE=false
 
 RUN \
@@ -90,8 +90,8 @@ RUN \
   # needs them to exist.
   mkdir -p data/pack data/symbols node_modules/.cache && \
   # This step runs as root, so change the owner of its files to the user.
-  # `find` leaves the files of the earlier layer alone, so they are not copied
-  # into this one.
+  # `find` leaves the files of the earlier layer alone, so this step does not
+  # copy them into its own layer.
   find /opt/lost-city-rs \( \! -user lost-city-rs -o \! -group lost-city-rs \) -exec chown -h lost-city-rs:lost-city-rs {} +
 
 WORKDIR /home/lost-city-rs
